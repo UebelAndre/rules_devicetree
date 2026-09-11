@@ -25,6 +25,7 @@ DevicetreeToolchainInfo = provider(
         for name in TOOLCHAIN_TOOLS
     } | {
         "label": "Label to the toolchain",
+        "default_copts": "Default list of flags to the C preprocessor",
         "default_dtcopts": "Default list of flags to dtc",
         "preprocess": """Whether source files are preprocessed.
 

@@ -99,6 +99,7 @@ def _devicetree_toolchain_impl(ctx):
     )
     devicetree_toolchain_info = DevicetreeToolchainInfo(
         label = ctx.label,
+        default_copts = ctx.attr.default_copts,
         default_dtcopts = ctx.attr.default_dtcopts,
         preprocess = getattr(ctx.attr, "preprocess", None),
         **devicetree_toolchain_info_fields
@@ -127,6 +128,13 @@ _common_attrs = {
     )
     for name, doc in TOOLCHAIN_TOOLS.items()
 } | {
+    "default_copts": attr.string_list(doc = """Default list of flags to the C preprocessor.
+
+        These are only used if source files are preprocessed. They are added
+        after the flags that `dtb()` and `dtbo()` always pass (`-undef
+        -D__DTS__` and the include directories from `deps`), and before
+        `dtb(copts=)` and `dtbo(copts=)`.
+"""),
     "default_dtcopts": attr.string_list(doc = "Default list of flags to dtc"),
 }
 

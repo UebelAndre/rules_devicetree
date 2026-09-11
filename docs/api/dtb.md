@@ -9,7 +9,7 @@ Builds device tree blobs.
 <pre>
 load("@rules_devicetree//devicetree:dtb.bzl", "dtb")
 
-dtb(<a href="#dtb-name">name</a>, <a href="#dtb-deps">deps</a>, <a href="#dtb-srcs">srcs</a>, <a href="#dtb-out">out</a>, <a href="#dtb-dtcopts">dtcopts</a>, <a href="#dtb-generate_symbols">generate_symbols</a>)
+dtb(<a href="#dtb-name">name</a>, <a href="#dtb-deps">deps</a>, <a href="#dtb-srcs">srcs</a>, <a href="#dtb-out">out</a>, <a href="#dtb-copts">copts</a>, <a href="#dtb-dtcopts">dtcopts</a>, <a href="#dtb-generate_symbols">generate_symbols</a>)
 </pre>
 
 Build a base devicetree blob (DTB).
@@ -32,6 +32,7 @@ dtb(
 | <a id="dtb-deps"></a>deps |  List of [`devicetree_library()`](devicetree_library.md#devicetree_library) targets for `.dtsi` and `.h` inclusion.<br><br>Order matters. See [`devicetree_library(includes=)`](devicetree_library.md#devicetree_library-includes) for details about ordering of include directories.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="dtb-srcs"></a>srcs |  List of sources.<br><br>There must be exactly one `.dts` file.<br><br>`.dtsi` and `.h` files in the same directory or subdirectories may also be specified if you do not need extra search directories (`-i` option to `dtc`). If you do need to pair search directories with `.dtsi` and `.h` files, use [`devicetree_library()`](devicetree_library.md#devicetree_library) and add them to [`deps`](#dtb-deps).   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="dtb-out"></a>out |  Output file name. This should end with `.dtb`.<br><br>Default is `name + ".dtb"`, if name does not end with `.dtb`; otherwise `name`.   | String | optional |  `""`  |
+| <a id="dtb-copts"></a>copts |  List of flags to the C preprocessor.<br><br>These are only used if [preprocessing](../configuring_toolchain.md#supporting-c-preprocessor-directives) is enabled, and they are appended after [`devicetree_toolchain(default_copts=)`](toolchain.md#devicetree_toolchain-default_copts).   | List of strings | optional |  `[]`  |
 | <a id="dtb-dtcopts"></a>dtcopts |  List of flags to dtc.   | List of strings | optional |  `[]`  |
 | <a id="dtb-generate_symbols"></a>generate_symbols |  Enable generation of symbols (-@).<br><br>This is necessary if you are applying overlays on top of it.   | Boolean | optional |  `False`  |
 

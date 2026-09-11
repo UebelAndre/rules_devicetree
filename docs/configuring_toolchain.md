@@ -99,6 +99,31 @@ before `dtb(dtcopts=)` and `dtbo(dtcopts=)`, respectively.
 For a concrete example, see
 [e2e/custom_toolchain/BUILD.bazel](../e2e/custom_toolchain/BUILD.bazel).
 
+### Adding default flags to the preprocessor
+
+The `devicetree_toolchain()` has an optional `default_copts` attribute. These
+flags are automatically applied when `dtb()` and `dtbo()` invokes the C
+preprocessor, before `dtb(copts=)` and `dtbo(copts=)`, respectively. They are
+only used if [preprocessing](#supporting-c-preprocessor-directives) is enabled.
+
+Use this for project-wide definitions. Definitions that vary between
+devicetrees, such as a board revision, belong in `dtb(copts=)` and
+`dtbo(copts=)` instead.
+
+```starlark
+devicetree_toolchain(
+    name = "devicetree_toolchain",
+    default_copts = ["-DARCH_ARM64"],
+    dtc = ":dtc",
+    fdtoverlay = ":fdtoverlay",
+    preprocess = True,
+)
+```
+
+See
+[Specifying additional flags to the preprocessor](building.md#specifying-additional-flags-to-the-preprocessor)
+for the full ordering of preprocessor flags.
+
 ## Using the devicetree toolchain installed on host
 
 If `dtc`, `fdtoverlay` etc. are installed on the machine that executes

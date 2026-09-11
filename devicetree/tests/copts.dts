@@ -1,0 +1,8 @@
+/dts-v1/;
+
+#ifndef FROM_COPTS
+#error "FROM_COPTS is not defined; copts was not passed to the preprocessor"
+#endif
+
+/ {
+};

@@ -87,6 +87,8 @@ def _preprocess(
         include_files,
         out_attr,
         out_extension,
+        default_copts,
+        copts,
         deps):
     # Don't preprocess if:
     # - It is disabled in devicetree_toolchain()
@@ -126,8 +128,13 @@ def _preprocess(
         expand_directories = False,
     )
 
-    # Handle defines
+    # Handle defines. These come before the user flags so that `-undef` does
+    # not discard the definitions in default_copts and copts.
     args.add_all(["-undef", "-D__DTS__"])
+
+    # User flags. copts comes last so a target can override default_copts.
+    args.add_all(default_copts)
+    args.add_all(copts)
 
     # Treat input files as "assembler-with-cpp"
     args.add_all(["-x", "assembler-with-cpp"])
@@ -229,6 +236,8 @@ def _dtb_impl(ctx):
         include_files = split_sources.include_files,
         out_attr = ctx.attr.out,
         out_extension = "dtb",
+        default_copts = devicetree_toolchain_info.default_copts,
+        copts = ctx.attr.copts,
         deps = ctx.attr.deps,
     )
     out = _dtc(
@@ -288,6 +297,13 @@ dtb = rule(
                 otherwise `name`.
             """,
         ),
+        "copts": attr.string_list(doc = """List of flags to the C preprocessor.
+
+            These are only used if
+            [preprocessing](../configuring_toolchain.md#supporting-c-preprocessor-directives)
+            is enabled, and they are appended after
+            [`devicetree_toolchain(default_copts=)`](toolchain.md#devicetree_toolchain-default_copts).
+        """),
         "dtcopts": attr.string_list(doc = "List of flags to dtc."),
         "deps": attr.label_list(
             doc = """List of [`devicetree_library()`](devicetree_library.md#devicetree_library) targets for `.dtsi` and `.h` inclusion.
@@ -316,6 +332,8 @@ def _dtbo_impl(ctx):
         include_files = split_sources.include_files,
         out_attr = ctx.attr.out,
         out_extension = "dtb",
+        default_copts = devicetree_toolchain_info.default_copts,
+        copts = ctx.attr.copts,
         deps = ctx.attr.deps,
     )
     out = _dtc(
@@ -368,6 +386,13 @@ dtbo = rule(
                 otherwise `name`.
             """,
         ),
+        "copts": attr.string_list(doc = """List of flags to the C preprocessor.
+
+            These are only used if
+            [preprocessing](../configuring_toolchain.md#supporting-c-preprocessor-directives)
+            is enabled, and they are appended after
+            [`devicetree_toolchain(default_copts=)`](toolchain.md#devicetree_toolchain-default_copts).
+        """),
         "dtcopts": attr.string_list(doc = "List of flags to dtc."),
         "deps": attr.label_list(
             doc = """List of [`devicetree_library()`](devicetree_library.md#devicetree_library) targets for `.dtsi` and `.h` inclusion.
